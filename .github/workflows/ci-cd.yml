@@ -1,45 +1,41 @@
-name: GCP Kubernetes Deployment
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main  # Trigger deployment on push to the main branch
+      - main
 
 env:
   PROJECT_ID: linen-creek-438713-t1
-  CLUSTER_NAME: my-cluster
-  CLUSTER_ZONE: us-central1-a  # Example: us-central1-a
-  APP_NAME: web-app
+  APP_NAME: web-app  # App name as per your deployment.yaml
+  IMAGE_TAG: 1.0
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout code
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      # Step 2: Authenticate with GCP using the Service Account Key
-      - name: Set up GCloud
+      - name: Authenticate with GCP
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
+          echo "$GCP_SA_KEY" > $HOME/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
           gcloud config set project $PROJECT_ID
+          gcloud auth configure-docker gcr.io
 
-      # Step 3: Configure kubectl for cluster access
-      - name: Get GKE credentials
+      - name: Build and Push Docker Image
         run: |
-          gcloud container clusters get-credentials $CLUSTER_NAME --zone $CLUSTER_ZONE --project $PROJECT_ID
+          docker build -t gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG .
+          docker push gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG
 
-      # Step 4: Deploy to Kubernetes
-      - name: Apply Kubernetes manifests
+      - name: Set up kubectl
+        run: |
+          gcloud container clusters get-credentials <your-cluster-name> --zone <your-zone> --project $PROJECT_ID
+
+      - name: Deploy to GKE
         run: |
           kubectl apply -f deployment.yaml
-
-      # Step 5: Verify Deployment
-      - name: Verify Kubernetes Deployment
-        run: |
-          kubectl rollout status deployment/$APP_NAME
+          kubectl apply -f service.yaml
