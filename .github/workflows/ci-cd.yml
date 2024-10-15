@@ -21,7 +21,7 @@ jobs:
 
       - name: Set up Gcloud
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
+          echo ""${{ secrets.GCP_SA_KEY }}""" > $HOME/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
           gcloud config set project linen-creek-438713-t1  # Replace with your actual project ID
 
