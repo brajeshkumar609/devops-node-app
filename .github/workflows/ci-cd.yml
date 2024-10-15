@@ -22,7 +22,7 @@ jobs:
           set -e  # Exit immediately if a command exits with a non-zero status
 
           echo "Creating service account key file..."
-          if [[ -z "${{ secrets.GCP_SA_KEY }}" ]]; then
+          if [ -z "${{ secrets.GCP_SA_KEY }}" ]; then
             echo "Error: GCP_SA_KEY secret is not set."
             exit 1
           fi
