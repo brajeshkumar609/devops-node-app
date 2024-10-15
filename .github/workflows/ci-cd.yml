@@ -12,22 +12,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Check Home Directory
+        run: |
+          echo "Listing home directory:"
+          ls -la $HOME
+
       - name: Set up Gcloud
         run: |
-          echo "Creating service account key file..."
-          echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
-          
-          echo "Checking contents of the key file:"
-          cat $HOME/gcloud-service-key.json  # Be cautious; do not share sensitive info
+          set -e  # Exit immediately if a command exits with a non-zero status
 
           echo "Creating service account key file..."
+          if [[ -z "${{ secrets.GCP_SA_KEY }}" ]]; then
+            echo "Error: GCP_SA_KEY secret is not set."
+            exit 1
+          fi
+
           echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
-          
+
           echo "Checking contents of the key file:"
           cat $HOME/gcloud-service-key.json
 
           echo "Validating JSON format:"
-          echo "${{ secrets.GCP_SA_KEY }}" | jq empty  # Requires jq to be installed
+          if ! echo "${{ secrets.GCP_SA_KEY }}" | jq empty; then
+            echo "Error: Invalid JSON format in GCP_SA_KEY."
+            exit 1
+          fi
 
           echo "Listing files in home directory:"
           ls -la $HOME
@@ -37,17 +46,20 @@ jobs:
 
           echo "Activating service account..."
           gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
-          
+
           echo "Setting Google Cloud project..."
           gcloud config set project linen-creek-438713-t1
 
-
       - name: Build and push Docker image
         run: |
-          docker build -t gcr.io/<your-project-id>/my-nodejs-app:1.0 .
+          echo "Building Docker image..."
+          docker build -t gcr.io/linen-creek-438713-t1/my-nodejs-app:1.0 .
+          echo "Pushing Docker image..."
           docker push gcr.io/linen-creek-438713-t1/my-nodejs-app:1.0
 
       - name: Deploy to GKE
         run: |
+          echo "Applying deployment configuration..."
           kubectl apply -f deployment.yaml
+          echo "Applying service configuration..."
           kubectl apply -f service.yaml
