@@ -1,40 +1,48 @@
-name: CI/CD Pipeline
+name: "CI/CD Pipeline"
 
 on:
   push:
     branches:
-      - main  # Runs on push to the main branch
+      - main  # Trigger on the main branch
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout Repository
+      # Step 1: Checkout Code
       - name: Checkout code
         uses: actions/checkout@v3  # Latest stable version
 
-      # Step 2: Set up Google Cloud SDK using Official GitHub Action
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1  # Stable release
-        with:
-          project_id: linen-creek-438713-t1  # Static project ID
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+      # Step 2: Set up Google Cloud SDK and Authenticate
+      - name: Set up Gcloud
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
+          gcloud config set project linen-creek-438713-t1  # Static project ID
 
-      # Step 3: Build and Push Docker Image to GCR
+      # Step 3: Configure Docker for GCP
+      - name: Configure Docker Authentication
+        run: gcloud auth configure-docker
+
+      # Step 4: Build and Push Docker Image to GCR
       - name: Build and Push Docker Image
-        run: |
-          docker build -t gcr.io/linen-creek-438713-t1/web-app:1.0 .
-          docker push gcr.io/linen-creek-438713-t1/web-app:1.0
+        uses: docker/build-push-action@v2
+        with:
+          context: .  # Use current directory as build context
+          push: true
+          tags: gcr.io/linen-creek-438713-t1/web-app:1.0  # Static project and image name
+          build-args: |
+            HTTP_PORT=8080
 
-      # Step 4: Configure kubectl for GKE
-      - name: Configure kubectl for GKE
+      # Step 5: Get GKE Cluster Credentials
+      - name: Get GKE Cluster Credentials
         run: |
-          gcloud container clusters get-credentials my-cluster --zone us-central1-a  # Replace with your cluster and zone details
+          gcloud container clusters get-credentials my-cluster --zone us-central1-a --project linen-creek-438713-t1
+          kubectl version --client  # Verify kubectl configuration
 
-      # Step 5: Deploy to GKE
+      # Step 6: Deploy to GKE
       - name: Deploy to GKE
         run: |
-          kubectl apply -f deployment.yaml
-          kubectl apply -f service.yaml
+          kubectl apply -f deployment.yaml  # Ensure deployment.yaml is present
+          kubectl apply -f service.yaml     # Ensure service.yaml is present
