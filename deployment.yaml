@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: gcr.io/linen-creek-438713-t1/webr̥-app:1.0
+        image: gcr.io/linen-creek-438713-t1/web-app:1.0
         ports:
         - containerPort: 3000
