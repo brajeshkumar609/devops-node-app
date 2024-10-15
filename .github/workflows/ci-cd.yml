@@ -1,48 +1,45 @@
-name: "CI/CD Pipeline"
+name: GCP Kubernetes Deployment
 
 on:
   push:
     branches:
-      - main  # Trigger on the main branch
+      - main  # Trigger deployment on push to the main branch
+
+env:
+  PROJECT_ID: linen-creek-438713-t1
+  CLUSTER_NAME: my-cluster
+  CLUSTER_ZONE: us-central1-a  # Example: us-central1-a
+  APP_NAME: web-app
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout Code
+      # Step 1: Checkout code
       - name: Checkout code
-        uses: actions/checkout@v3  # Latest stable version
+        uses: actions/checkout@v3
 
-      # Step 2: Set up Google Cloud SDK and Authenticate
-      - name: Set up Gcloud
+      # Step 2: Authenticate with GCP using the Service Account Key
+      - name: Set up GCloud
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: |
-           echo "${{ secrets.GCP_SA_KEY }}" | base64 --decode > $HOME/gcloud-service-key.json
-           gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
-           gcloud config set project linen-creek-438713-t1
+          echo "${GCP_SA_KEY}" | base64 --decode > $HOME/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
+          gcloud config set project $PROJECT_ID
 
-      # Step 3: Configure Docker for GCP
-      - name: Configure Docker Authentication
-        run: gcloud auth configure-docker
-
-      # Step 4: Build and Push Docker Image to GCR
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        with:
-          context: .  # Use current directory as build context
-          push: true
-          tags: gcr.io/linen-creek-438713-t1/web-app:1.0  # Static project and image name
-          build-args: |
-            HTTP_PORT=8080
-
-      # Step 5: Get GKE Cluster Credentials
-      - name: Get GKE Cluster Credentials
+      # Step 3: Configure kubectl for cluster access
+      - name: Get GKE credentials
         run: |
-          gcloud container clusters get-credentials my-cluster --zone us-central1-a --project linen-creek-438713-t1
-          kubectl version --client  # Verify kubectl configuration
+          gcloud container clusters get-credentials $CLUSTER_NAME --zone $CLUSTER_ZONE --project $PROJECT_ID
 
-      # Step 6: Deploy to GKE
-      - name: Deploy to GKE
+      # Step 4: Deploy to Kubernetes
+      - name: Apply Kubernetes manifests
         run: |
-          kubectl apply -f deployment.yaml  # Ensure deployment.yaml is present
-          kubectl apply -f service.yaml     # Ensure service.yaml is present
+          kubectl apply -f deployment.yaml
+
+      # Step 5: Verify Deployment
+      - name: Verify Kubernetes Deployment
+        run: |
+          kubectl rollout status deployment/$APP_NAME
