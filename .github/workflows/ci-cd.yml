@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
-          gcloud config set project <your-project-id>
+          gcloud config set project deployment.yaml
 
       - name: Deploy to GKE
         run: |
