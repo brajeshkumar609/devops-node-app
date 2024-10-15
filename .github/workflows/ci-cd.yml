@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -27,8 +27,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t gcr.io/linen-creek-438713-t1/my-nodejs-app:1.0 .  # Replace with your actual project ID
-          docker push gcr.io/linen-creek-438713-t1/my-nodejs-app:1.0  # Replace with your actual project ID
+          docker build -t gcr.io/linen-creek-438713-t1/web-app:1.0 .  # Replace with your actual project ID
+          docker push gcr.io/linen-creek-438713-t1/web-app:1.0  # Replace with your actual project ID
 
       - name: Deploy to GKE
         run: |
