@@ -1,11 +1,11 @@
 name: CI/CD Pipeline
 
-on:
+on: 
   push:
     branches:
       - main
 
-env:
+env: 
   PROJECT_ID: linen-creek-438713-t1
   APP_NAME: web-app  # App name as per your deployment.yaml
   IMAGE_TAG: 1.0
@@ -13,9 +13,17 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Install Google Cloud SDK
+        run: |
+          curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-367.0.0-linux-x86_64.tar.gz
+          tar -xvzf google-cloud-sdk-367.0.0-linux-x86_64.tar.gz
+          ./google-cloud-sdk/install.sh
+          ./google-cloud-sdk/bin/gcloud init
 
       - name: Authenticate with GCP
         env:
@@ -33,7 +41,7 @@ jobs:
 
       - name: Set up kubectl
         run: |
-          gcloud container clusters get-credentials <your-cluster-name> --zone <your-zone> --project $PROJECT_ID
+          gcloud container clusters get-credentials my-cluster --zone us-central1-a --project $PROJECT_ID
 
       - name: Deploy to GKE
         run: |
