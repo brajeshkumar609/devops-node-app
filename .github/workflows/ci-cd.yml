@@ -3,33 +3,37 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - main  # Runs on push to the main branch
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # Step 1: Checkout Repository
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Latest stable version
 
-      - name: Install Google Cloud SDK
+      # Step 2: Set up Google Cloud SDK using Official GitHub Action
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1  # Stable release
+        with:
+          project_id: linen-creek-438713-t1  # Static project ID
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # Step 3: Build and Push Docker Image to GCR
+      - name: Build and Push Docker Image
         run: |
-          echo "Installing Google Cloud SDK..."
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-          sudo apt-get update && sudo apt-get install -y google-cloud-sdk
+          docker build -t gcr.io/linen-creek-438713-t1/web-app:1.0 .
+          docker push gcr.io/linen-creek-438713-t1/web-app:1.0
 
-      - name: Set up Gcloud
+      # Step 4: Configure kubectl for GKE
+      - name: Configure kubectl for GKE
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
-          gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
-          gcloud config set project linen-creek-438713-t1  # Replace with your actual project ID
+          gcloud container clusters get-credentials my-cluster --zone us-central1-a  # Replace with your cluster and zone details
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t gcr.io/linen-creek-438713-t1/web-app:1.0 .  # Replace with your actual project ID
-          docker push gcr.io/linen-creek-438713-t1/web-app:1.0  # Replace with your actual project ID
-
+      # Step 5: Deploy to GKE
       - name: Deploy to GKE
         run: |
           kubectl apply -f deployment.yaml
