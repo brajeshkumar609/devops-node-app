@@ -20,6 +20,15 @@ jobs:
           echo "Checking contents of the key file:"
           cat $HOME/gcloud-service-key.json  # Be cautious; do not share sensitive info
 
+          echo "Creating service account key file..."
+          echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
+          
+          echo "Checking contents of the key file:"
+          cat $HOME/gcloud-service-key.json
+
+          echo "Validating JSON format:"
+          echo "${{ secrets.GCP_SA_KEY }}" | jq empty  # Requires jq to be installed
+
           echo "Listing files in home directory:"
           ls -la $HOME
 
