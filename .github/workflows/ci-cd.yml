@@ -14,9 +14,24 @@ jobs:
 
       - name: Set up Gcloud
         run: |
+          echo "Creating service account key file..."
           echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
+          
+          echo "Checking contents of the key file:"
+          cat $HOME/gcloud-service-key.json  # Be cautious; do not share sensitive info
+
+          echo "Listing files in home directory:"
+          ls -la $HOME
+
+          echo "Checking permissions for the key file:"
+          ls -la $HOME/gcloud-service-key.json
+
+          echo "Activating service account..."
           gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
+          
+          echo "Setting Google Cloud project..."
           gcloud config set project linen-creek-438713-t1
+
 
       - name: Build and push Docker image
         run: |
