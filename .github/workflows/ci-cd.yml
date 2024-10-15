@@ -17,10 +17,9 @@ jobs:
       # Step 2: Set up Google Cloud SDK and Authenticate
       - name: Set up Gcloud
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > $HOME/gcloud-service-key.json
-          cat $HOME/gcloud-service-key.json | jq '.'  # Debugging step to validate JSON
-          gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
-          gcloud config set project linen-creek-438713-t1
+           echo "${{ secrets.GCP_SA_KEY }}" | base64 --decode > $HOME/gcloud-service-key.json
+           gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
+           gcloud config set project linen-creek-438713-t1
 
       # Step 3: Configure Docker for GCP
       - name: Configure Docker Authentication
