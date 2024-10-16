@@ -41,7 +41,7 @@ jobs:
           ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
           ./google-cloud-sdk/bin/gcloud auth configure-docker gcr.io
 
-     -  name: Delete All Docker Images
+      - name: Delete All Docker Images
         run: |
           # List all images and delete them
           gcloud container images list --repository=gcr.io/$PROJECT_ID --format='get(name)' | while read -r image; do
