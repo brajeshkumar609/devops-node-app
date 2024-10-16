@@ -27,6 +27,9 @@ jobs:
       - name: Update Google Cloud SDK
         run: |
           ./google-cloud-sdk/bin/gcloud components update    
+          - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin --quiet
 
       - name: Authenticate with GCP
         env:
