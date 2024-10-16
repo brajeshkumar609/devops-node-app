@@ -18,37 +18,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: install the gcloud cli
+      - name: Install the gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GOOGLE_PROJECT }}
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY  }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
           install_components: 'gke-gcloud-auth-plugin'
           export_default_credentials: true
 
-         
-         
-
-      - name: Authenticate with GCP
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: |
-          echo "$GCP_SA_KEY" > $HOME/gcloud-service-key.json
-          ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
-          ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
-          ./google-cloud-sdk/bin/gcloud auth configure-docker gcr.io
-
-      - name: Build and Push Docker Image
+      - name: Configure Docker for GCR
         run: |
           gcloud auth configure-docker
 
+      - name: Build and Push Docker Image
+        run: |
           docker build -t gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG .
           docker push gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG
 
-
       - name: Set up kubectl
         run: |
-          ./google-cloud-sdk/bin/gcloud container clusters get-credentials my-cluster --zone us-central1-c --project $PROJECT_ID
+          gcloud container clusters get-credentials my-cluster --zone us-central1-c --project $PROJECT_ID
 
       - name: Deploy to GKE
         run: |
