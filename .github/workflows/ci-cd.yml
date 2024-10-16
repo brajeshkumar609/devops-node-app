@@ -8,8 +8,7 @@ on:
 env:
   PROJECT_ID: linen-creek-438713-t1
   APP_NAME: web-app  # App name as per your deployment.yaml
-  IMAGE_TAG: 1.0
-
+  IMAGE_TAG: ${{ github.run_id }}
 jobs:
   build:
     runs-on: ubuntu-latest
