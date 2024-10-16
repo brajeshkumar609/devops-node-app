@@ -28,6 +28,7 @@ jobs:
         run: |
           ./google-cloud-sdk/bin/gcloud components update    
           - name: Install gke-gcloud-auth-plugin
+      - name: download plugin
         run: |
           gcloud components install gke-gcloud-auth-plugin --quiet
 
