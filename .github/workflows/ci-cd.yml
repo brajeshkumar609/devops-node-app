@@ -24,6 +24,10 @@ jobs:
           tar -xvzf google-cloud-sdk-367.0.0-linux-x86_64.tar.gz
           ./google-cloud-sdk/install.sh
 
+      - name: Update Google Cloud SDK
+        run: |
+          ./google-cloud-sdk/bin/gcloud components update    
+
       - name: Authenticate with GCP
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
