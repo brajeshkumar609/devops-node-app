@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 // Route: Hello World
 app.get('/', (req, res) => {
-  res.send('Hello, World! brajesgjvjyh');
+  res.send('Hello, World! RISHITA');
 });
 
 // Route: JSON Response
