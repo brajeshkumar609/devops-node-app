@@ -31,7 +31,8 @@ jobs:
       
       - name: download plugin
         run: |
-          gcloud components install gke-gcloud-auth-plugin --quiet
+          sudo apt-get update
+          sudo apt-get install google-cloud-cli-gke-gcloud-auth-plugin -y
 
       - name: Authenticate with GCP
         env:
