@@ -46,9 +46,9 @@ jobs:
           # List all images and delete them
           gcloud container images list --repository=gcr.io/$PROJECT_ID --format='get(name)' | while read -r image; do
             gcloud container images list-tags "$image" --format='get(digest)' | while read -r digest; do
-              gcloud container images delete "$image@$digest" --quiet
+              gcloud container images delete "$image@$digest" --quiet --force-delete-tags
             done
-          done   
+          done 
 
       - name: Build and Push Docker Image
         run: |
