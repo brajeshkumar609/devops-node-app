@@ -26,9 +26,7 @@ jobs:
           install_components: 'gke-gcloud-auth-plugin'
           export_default_credentials: true
 
-      - name: Update Google Cloud SDK
-        run: |
-          ./google-cloud-sdk/bin/gcloud components update    
+         
          
 
       - name: Authenticate with GCP
