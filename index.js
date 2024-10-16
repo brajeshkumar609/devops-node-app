@@ -1,13 +1,17 @@
 // Import Express
 const express = require('express');
+const path = require('path'); // Import the path module
 const app = express();
 
 // Define a port
 const PORT = process.env.PORT || 3000;
 
-// Route: Hello World
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Route: Resume Page
 app.get('/', (req, res) => {
-  res.send('Hello, World! RISHIdsddsdsdsdsTA hi');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Route: JSON Response
