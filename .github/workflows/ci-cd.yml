@@ -21,7 +21,7 @@ jobs:
       - name: Install Google Cloud SDK
         run: |
           curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-367.0.0-linux-x86_64.tar.gz
-          tar -xvzf google-cloud-sdk-497.0.0-linux-x86_64.tar.gz
+          tar -xvzf google-cloud-sdk-367.0.0-linux-x86_64.tar.gz
           ./google-cloud-sdk/install.sh
 
       - name: Authenticate with GCP
