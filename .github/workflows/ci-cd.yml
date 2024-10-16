@@ -31,11 +31,7 @@ jobs:
       
       - name: download plugin
         run: |
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt google-cloud-cli main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-cli.list
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt google-cloud-cli gke gcloud" | sudo tee -a /etc/apt/sources.list.d/google-cloud-cli.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
-          sudo apt-get update
-          sudo apt-get install google-cloud-cli-gke-gcloud-auth-plugin -y
+          gcloud components install gke-gcloud-auth-plugin
 
       - name: Authenticate with GCP
         env:
