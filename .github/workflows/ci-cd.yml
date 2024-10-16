@@ -41,6 +41,13 @@ jobs:
           ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
           ./google-cloud-sdk/bin/gcloud auth configure-docker gcr.io
 
+     -  name: Delete All Docker Images
+        run: |
+          # List all images and delete them
+          gcloud container images list --repository=gcr.io/$PROJECT_ID --format='get(name)' | while read -r image; do
+            gcloud container images delete "$image" --quiet
+          done     
+
       - name: Build and Push Docker Image
         run: |
           docker build -t gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG .
