@@ -40,7 +40,7 @@ jobs:
 
       - name: Set up kubectl
         run: |
-          ./google-cloud-sdk/bin/gcloud container clusters get-credentials my-cluster --zone us-central1-a --project $PROJECT_ID
+          ./google-cloud-sdk/bin/gcloud container clusters get-credentials my-cluster --zone us-central1-c --project $PROJECT_ID
 
       - name: Deploy to GKE
         run: |
