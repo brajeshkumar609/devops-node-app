@@ -1,78 +1,84 @@
 /* General Styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f2f5;
     margin: 0;
     padding: 0;
+    background: #f0f4f8;
 }
 
-/* Header */
-header {
-    background-color: #283593;
+/* Hero Section */
+.hero {
+    text-align: center;
+    background: linear-gradient(to right, #1c92d2, #f2fcfe);
+    padding: 100px 0;
+    color: #fff;
+}
+
+/* Navigation Bar */
+nav {
+    background: #0d47a1;
+    padding: 10px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* Section Styles */
+section {
+    margin: 50px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Skills Section */
+.skill-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.skill {
+    padding: 15px;
+    background: #1976d2;
     color: white;
     text-align: center;
-    padding: 30px 0;
+    border-radius: 5px;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 2.5rem;
+/* Projects Section */
+.project {
+    margin-top: 20px;
+    padding: 15px;
+    border: 2px dashed #1976d2;
+    border-radius: 5px;
 }
 
-header h2 {
-    margin-top: 10px;
-    font-weight: 300;
-}
-
-/* Main Content */
-main {
-    max-width: 800px;
-    margin: 40px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-section {
-    margin-bottom: 20px;
-}
-
-h3 {
-    color: #283593;
-    border-bottom: 2px solid #283593;
-    padding-bottom: 5px;
-    margin-bottom: 15px;
-}
-
-/* List Styles */
-ul {
-    list-style-type: disc;
-    padding-left: 20px;
-}
-
-ul li {
-    margin-bottom: 10px;
-}
-
-/* Links */
-a {
-    color: #283593;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
+/* Testimonials Section */
+blockquote {
+    font-style: italic;
+    color: #555;
+    margin: 20px 0;
 }
 
 /* Footer */
 footer {
-    background-color: #283593;
-    color: white;
     text-align: center;
-    padding: 10px 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    margin-top: 40px;
+    padding: 10px;
+    background: #0d47a1;
+    color: white;
 }

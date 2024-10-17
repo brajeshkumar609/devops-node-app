@@ -1,25 +1,14 @@
-// Import Express
 const express = require('express');
-const path = require('path'); // Import the path module
 const app = express();
+const PORT = 3000;
 
-// Define a port
-const PORT = process.env.PORT || 3000;
+// Serve static files from 'public' directory
+app.use(express.static('public'));
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Route: Resume Page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(__dirname + '/public/index.html');
 });
 
-// Route: JSON Response
-app.get('/status', (req, res) => {
-  res.json({ message: 'App is running smosssdsdsothly!', status: 'OK' });
-});
-
-// Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`App running on http://localhost:${PORT}`);
 });
