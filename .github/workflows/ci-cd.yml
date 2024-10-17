@@ -62,6 +62,5 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          kubectl delete deployment web-app
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
