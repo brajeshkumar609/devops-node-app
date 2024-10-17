@@ -64,6 +64,7 @@ jobs:
       - name: Substitute Environment Variable
         run: |
           sed -i 's/\$(IMAGE_TAG)/'${{ github.run_id }}'/g' deployment.yaml
+          cat deployment.yaml
 
       - name: Deploy to GKE
         run: |
