@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Display Run ID
+        run: echo "GitHub Run ID: ${{ github.run_id }}"
 
       - name: Install Google Cloud SDK
         run: |
