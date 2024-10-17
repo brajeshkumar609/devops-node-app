@@ -51,6 +51,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
+          gcloud auth configure-docker
           docker build --no-cache -t gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG .
           docker push gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG
 
