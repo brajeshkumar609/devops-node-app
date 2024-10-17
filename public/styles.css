@@ -1,116 +1,102 @@
-/* Reset Styles */
-body, h1, h2, p, ul, li {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Background and Font Styles */
+/* General Body Styles */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom right, #f0f4f7, #d9e4f0);
-    color: #333;
-    overflow-x: hidden;
+    background-color: #f5f5f5; /* Light background */
+    color: #333; /* Dark text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Header Animation */
+/* Header Styles */
 header {
-    background-color: #2a2a2a;
-    color: white;
+    background-color: #3d5a80; /* Original color */
+    width: 100%;
+    padding: 20px;
     text-align: center;
-    padding: 40px 0;
-    animation: slideDown 1s ease-out;
+    color: white;
+    position: relative;
 }
 
-@keyframes slideDown {
-    0% {
-        transform: translateY(-100px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
 }
 
-/* Section Animations */
+/* Section Styles */
 section {
-    margin: 40px 0;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(30px);
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 1.2s ease-out forwards;
-    animation-delay: 0.3s;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
 }
 
-/* Stagger animation for different sections */
-section:nth-child(2) {
-    animation-delay: 0.6s;
-}
-section:nth-child(3) {
-    animation-delay: 0.9s;
-}
-section:nth-child(4) {
-    animation-delay: 1.2s;
-}
-section:nth-child(5) {
-    animation-delay: 1.5s;
+/* Fade-in Animation */
+section.visible {
+    transform: translateY(0);
+    opacity: 1;
 }
 
-/* Fade In and Slide Up Animation */
-@keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Skills Hover Animation */
-ul li:hover {
+/* Back-to-Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
     background-color: #3d5a80;
     color: white;
-    transition: background-color 0.3s, transform 0.3s;
-    transform: scale(1.05);
-    border-radius: 5px;
-    padding: 5px;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-/* Smooth Links */
-a {
-    color: #3d5a80;
-    text-decoration: none;
-    transition: color 0.3s;
+.back-to-top.show {
+    display: block;
 }
 
-a:hover {
-    color: #293241;
+.back-to-top:hover {
+    background-color: #293241;
+    transform: scale(1.1);
 }
 
-/* Footer Animation */
-footer {
-    background-color: #2a2a2a;
-    color: white;
-    text-align: center;
-    padding: 15px;
+/* Theme Toggle Button */
+.theme-toggle {
     position: fixed;
-    width: 100%;
-    bottom: 0;
-    opacity: 0;
-    animation: fadeIn 1.5s ease-out forwards;
-    animation-delay: 2s;
+    top: 20px;
+    right: 20px;
+    background-color: #e0fbfc;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-/* Footer Fade-in */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
+.dark-theme {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.dark-theme .theme-toggle {
+    background-color: #3d5a80;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 2em;
     }
-    to {
-        opacity: 1;
+    section {
+        width: 95%;
     }
 }
