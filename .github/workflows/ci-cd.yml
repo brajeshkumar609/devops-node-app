@@ -53,7 +53,6 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          gcloud auth configure-docker
           docker build --no-cache -t gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG .
           docker push gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG
 
@@ -64,7 +63,5 @@ jobs:
       - name: Deploy to GKE
         run: |
           kubectl delete deployment web-app
-
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
-          kubectl rollout status deployment/web-app --timeout=60s
