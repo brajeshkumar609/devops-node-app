@@ -64,5 +64,8 @@ jobs:
       - name: Deploy to GKE
         run: |
           kubectl delete deployment web-app
+          kubectl set image deployment/web-app web-app=gcr.io/linen-creek-438713-t1/web-app:$IMAGE_TAG --record
+
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
+          kubectl rollout status deployment/web-app --timeout=60s
