@@ -1,45 +1,60 @@
 /* General Body Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5; /* Light background */
-    color: #333; /* Dark text */
+    background: linear-gradient(135deg, #f5f5f5, #dce2e8);
+    color: #333;
     display: flex;
     flex-direction: column;
     align-items: center;
+    animation: background-pan 15s infinite linear;
+}
+
+@keyframes background-pan {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }
 
 /* Header Styles */
 header {
-    background-color: #3d5a80; /* Original color */
+    background: radial-gradient(circle, #3d5a80, #293241);
     width: 100%;
-    padding: 20px;
+    padding: 40px;
     text-align: center;
     color: white;
     position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: header-fade 1.5s ease-in-out forwards;
+}
+
+@keyframes header-fade {
+    0% { opacity: 0; transform: translateY(-50px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 header h1 {
     margin: 0;
-    font-size: 2.5em;
+    font-size: 3em;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Section Styles */
 section {
-    width: 90%;
+    width: 85%;
     max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transform: translateY(30px);
+    margin: 30px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     opacity: 0;
-    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+    transform: translateY(50px);
+    transition: transform 0.8s ease-out, opacity 0.8s ease-out;
 }
 
-/* Fade-in Animation */
+/* Apply animation when section becomes visible */
 section.visible {
     transform: translateY(0);
     opacity: 1;
@@ -48,47 +63,70 @@ section.visible {
 /* Back-to-Top Button */
 .back-to-top {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: none;
+    bottom: 25px;
+    right: 25px;
     background-color: #3d5a80;
     color: white;
     border: none;
     border-radius: 50%;
-    padding: 10px;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    display: none;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
 }
 
 .back-to-top.show {
-    display: block;
+    display: flex;
 }
 
 .back-to-top:hover {
     background-color: #293241;
-    transform: scale(1.1);
+    transform: scale(1.2);
 }
 
-/* Theme Toggle Button */
+/* Theme Toggle */
 .theme-toggle {
     position: fixed;
     top: 20px;
     right: 20px;
     background-color: #e0fbfc;
     border: none;
-    border-radius: 50%;
+    border-radius: 20px;
     padding: 10px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: transform 0.3s ease-in-out;
+}
+
+.theme-toggle:hover {
+    transform: rotate(180deg);
 }
 
 .dark-theme {
     background-color: #1a1a1a;
-    color: white;
+    color: #ddd;
 }
 
 .dark-theme .theme-toggle {
     background-color: #3d5a80;
+}
+
+/* Animated Button Hover Effect */
+button {
+    background-color: #293241;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #ee6c4d;
+    transform: scale(1.1);
 }
 
 /* Media Queries for Responsiveness */
@@ -96,6 +134,7 @@ section.visible {
     header h1 {
         font-size: 2em;
     }
+
     section {
         width: 95%;
     }

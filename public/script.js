@@ -1,73 +1,70 @@
-// Smooth Scrolling for Internal Links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    });
-});
+document.addEventListener("DOMContentLoaded", function () {
+    const sections = document.querySelectorAll("section");
+    const backToTopButton = document.createElement("button");
+    const themeToggle = document.createElement("button");
+    backToTopButton.innerHTML = "↑";
+    themeToggle.innerHTML = "🌙";
+    backToTopButton.className = "back-to-top";
+    themeToggle.className = "theme-toggle";
 
-// Animated Typing Effect for Header
-const typedText = "Network Engineer | Aspiring DevOps Professional | Cloud Explorer";
-let index = 0;
+    document.body.appendChild(backToTopButton);
+    document.body.appendChild(themeToggle);
 
-function typeEffect() {
-    const headerText = document.querySelector('header p');
-    if (index < typedText.length) {
-        headerText.textContent += typedText.charAt(index);
-        index++;
-        setTimeout(typeEffect, 100); // Adjust speed here (100ms delay)
-    }
-}
-window.onload = typeEffect; // Trigger typing on page load
-
-// Fade-in Animation Trigger on Scroll
-const sections = document.querySelectorAll('section');
-
-function revealSection() {
-    sections.forEach(section => {
-        const sectionTop = section.getBoundingClientRect().top;
-        const triggerPoint = window.innerHeight / 1.3;
-        if (sectionTop < triggerPoint) {
-            section.classList.add('visible');
+    // Back-to-Top Button Show/Hide Logic
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 300) {
+            backToTopButton.classList.add("show");
+        } else {
+            backToTopButton.classList.remove("show");
         }
     });
-}
 
-window.addEventListener('scroll', revealSection); // Trigger fade-in on scroll
-
-// Back-to-Top Button Visibility and Scroll
-const backToTopButton = document.createElement('button');
-backToTopButton.textContent = '⬆️';
-backToTopButton.className = 'back-to-top';
-document.body.appendChild(backToTopButton);
-
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        backToTopButton.classList.add('show');
-    } else {
-        backToTopButton.classList.remove('show');
-    }
-});
-
-backToTopButton.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+    // Smooth Scroll to Top
+    backToTopButton.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
     });
-});
 
-// Theme Toggle (Light/Dark Mode)
-const themeToggle = document.createElement('button');
-themeToggle.textContent = '🌙';
-themeToggle.className = 'theme-toggle';
-document.body.appendChild(themeToggle);
+    // Section Fade-In Effect
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+            }
+        });
+    });
 
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-theme');
-    themeToggle.textContent =
-        document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+    sections.forEach((section) => {
+        observer.observe(section);
+    });
+
+    // Theme Toggle Functionality
+    themeToggle.addEventListener("click", function () {
+        document.body.classList.toggle("dark-theme");
+    });
+
+    // Add Time-Based Greetings
+    const header = document.querySelector("header h1");
+    const hours = new Date().getHours();
+    let greeting = "";
+
+    if (hours < 12) {
+        greeting = "Good Morning";
+    } else if (hours < 18) {
+        greeting = "Good Afternoon";
+    } else {
+        greeting = "Good Evening";
+    }
+
+    header.innerHTML = `${greeting} <br> Brajesh Kumar`;
+
+    // Smooth Scrolling for Navigation Links
+    const navLinks = document.querySelectorAll("nav a");
+    navLinks.forEach((link) => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("href");
+            document.querySelector(targetId).scrollIntoView({ behavior: "smooth" });
+        });
+    });
 });
