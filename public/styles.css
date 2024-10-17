@@ -1,84 +1,116 @@
-/* General Styles */
+/* Reset Styles */
+body, h1, h2, p, ul, li {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Background and Font Styles */
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background: #f0f4f8;
+    background: linear-gradient(to bottom right, #f0f4f7, #d9e4f0);
+    color: #333;
+    overflow-x: hidden;
 }
 
-/* Hero Section */
-.hero {
-    text-align: center;
-    background: linear-gradient(to right, #1c92d2, #f2fcfe);
-    padding: 100px 0;
-    color: #fff;
-}
-
-/* Navigation Bar */
-nav {
-    background: #0d47a1;
-    padding: 10px;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-}
-
-nav ul li {
-    margin: 0 15px;
-}
-
-nav a {
+/* Header Animation */
+header {
+    background-color: #2a2a2a;
     color: white;
-    text-decoration: none;
-    font-size: 18px;
+    text-align: center;
+    padding: 40px 0;
+    animation: slideDown 1s ease-out;
 }
 
-/* Section Styles */
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Section Animations */
 section {
-    margin: 50px;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 40px 0;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1.2s ease-out forwards;
+    animation-delay: 0.3s;
 }
 
-/* Skills Section */
-.skill-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+/* Stagger animation for different sections */
+section:nth-child(2) {
+    animation-delay: 0.6s;
+}
+section:nth-child(3) {
+    animation-delay: 0.9s;
+}
+section:nth-child(4) {
+    animation-delay: 1.2s;
+}
+section:nth-child(5) {
+    animation-delay: 1.5s;
 }
 
-.skill {
-    padding: 15px;
-    background: #1976d2;
+/* Fade In and Slide Up Animation */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Skills Hover Animation */
+ul li:hover {
+    background-color: #3d5a80;
     color: white;
-    text-align: center;
+    transition: background-color 0.3s, transform 0.3s;
+    transform: scale(1.05);
     border-radius: 5px;
+    padding: 5px;
 }
 
-/* Projects Section */
-.project {
-    margin-top: 20px;
-    padding: 15px;
-    border: 2px dashed #1976d2;
-    border-radius: 5px;
+/* Smooth Links */
+a {
+    color: #3d5a80;
+    text-decoration: none;
+    transition: color 0.3s;
 }
 
-/* Testimonials Section */
-blockquote {
-    font-style: italic;
-    color: #555;
-    margin: 20px 0;
+a:hover {
+    color: #293241;
 }
 
-/* Footer */
+/* Footer Animation */
 footer {
-    text-align: center;
-    padding: 10px;
-    background: #0d47a1;
+    background-color: #2a2a2a;
     color: white;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    opacity: 0;
+    animation: fadeIn 1.5s ease-out forwards;
+    animation-delay: 2s;
+}
+
+/* Footer Fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
