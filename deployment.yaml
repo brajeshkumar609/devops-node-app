@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: gcr.io/linen-creek-438713-t1/web-app:${{ env.IMAGE_TAG }}
+        image: gcr.io/linen-creek-438713-t1/web-app:$(IMAGE_TAG)
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
