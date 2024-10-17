@@ -50,6 +50,15 @@ jobs:
               gcloud container images delete "$image@$digest" --quiet --force-delete-tags
             done
           done 
+         
+      - name: Create Docker Pull Secret
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > gcp-sa-key.json
+          kubectl create secret docker-registry gcr-creds \
+            --docker-server=https://gcr.io \
+            --docker-username=_json_key \
+            --docker-password="$(cat gcp-sa-key.json)" \
+            --docker-email=your-email@example.com  
 
       - name: Build and Push Docker Image
         run: |
