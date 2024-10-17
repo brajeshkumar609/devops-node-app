@@ -60,6 +60,11 @@ jobs:
         run: |
           ./google-cloud-sdk/bin/gcloud container clusters get-credentials my-cluster --zone us-central1-c --project $PROJECT_ID
 
+
+      - name: Substitute Environment Variable
+        run: |
+          sed -i 's/$(IMAGE_TAG)/'${{ github.run_id }}'/g' deployment.yaml
+          
       - name: Deploy to GKE
         run: |
           kubectl apply -f deployment.yaml
