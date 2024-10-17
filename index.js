@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 
 // Route: JSON Response
 app.get('/status', (req, res) => {
-  res.json({ message: 'App is running smosssothly!', status: 'OK' });
+  res.json({ message: 'App is running smosssdsdsothly!', status: 'OK' });
 });
 
 // Start the server
