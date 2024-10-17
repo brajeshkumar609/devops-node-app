@@ -50,6 +50,11 @@ jobs:
               gcloud container images delete "$image@$digest" --quiet --force-delete-tags
             done
           done 
+
+      - name: Set up kubectl
+        run: |
+          ./google-cloud-sdk/bin/gcloud container clusters get-credentials my-cluster --zone us-central1-c --project $PROJECT_ID
+
          
       - name: Create Docker Pull Secret
         run: |
@@ -65,10 +70,7 @@ jobs:
           docker build --no-cache -t gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG .
           docker push gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG
 
-      - name: Set up kubectl
-        run: |
-          ./google-cloud-sdk/bin/gcloud container clusters get-credentials my-cluster --zone us-central1-c --project $PROJECT_ID
-
+     
 
       - name: Substitute Environment Variable
         run: |
