@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI - Build & Push to Docker Hub
 
 on:
   push:
@@ -6,71 +6,40 @@ on:
       - main
 
 env:
-  PROJECT_ID: linen-creek-438713-t1
-  APP_NAME: web-app  # App name as per your deployment.yaml
+  APP_NAME: web-app
   IMAGE_TAG: ${{ github.run_id }}
+  DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/web-app
+
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Display Run ID
-        run: echo "GitHub Run ID ${{ github.run_id }}"
+        uses: actions/checkout@v4
 
-      - name: Install Google Cloud SDK
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push (tagged with run_id and latest)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_REPO }}:${{ env.IMAGE_TAG }}
+            ${{ env.DOCKERHUB_REPO }}:latest
+          # Optional: enable caching for faster builds
+          cache-from: type=registry,ref=${{ env.DOCKERHUB_REPO }}:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKERHUB_REPO }}:buildcache,mode=max
+
+      - name: Display image info
         run: |
-          curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-367.0.0-linux-x86_64.tar.gz
-          tar -xvzf google-cloud-sdk-367.0.0-linux-x86_64.tar.gz
-          ./google-cloud-sdk/install.sh
-
-      - name: Update Google Cloud SDK
-        run: |
-          ./google-cloud-sdk/bin/gcloud components update
-
-      - name: Install gke-gcloud-auth-plugin
-        run: |
-          ./google-cloud-sdk/bin/gcloud components install gke-gcloud-auth-plugin
-      
-      - name: Authenticate with GCP
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: |
-          echo "$GCP_SA_KEY" > $HOME/gcloud-service-key.json
-          ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
-          ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
-          ./google-cloud-sdk/bin/gcloud auth configure-docker gcr.io
-
-      - name: Delete All Docker Images
-        run: |
-          # List all images and delete them
-          gcloud container images list --repository=gcr.io/$PROJECT_ID --format='get(name)' | while read -r image; do
-            gcloud container images list-tags "$image" --format='get(digest)' | while read -r digest; do
-              gcloud container images delete "$image@$digest" --quiet --force-delete-tags
-            done
-          done 
-
-      - name: Set up kubectl
-        run: |
-          ./google-cloud-sdk/bin/gcloud container clusters get-credentials my-cluster --zone us-central1-c --project $PROJECT_ID
-
-         
-    
-
-      - name: Build and Push Docker Image
-        run: |
-          docker build --no-cache -t gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG .
-          docker push gcr.io/$PROJECT_ID/$APP_NAME:$IMAGE_TAG
-
-     
-
-      - name: Substitute Environment Variable
-        run: |
-          sed -i 's/\$(IMAGE_TAG)/'${{ github.run_id }}'/g' deployment.yaml
-          cat deployment.yaml
-
-      - name: Deploy to GKE
-        run: |
-          kubectl apply -f deployment.yaml
-          kubectl apply -f service.yaml
+          echo "Pushed: $DOCKERHUB_REPO:${IMAGE_TAG}"
+          echo "Also tagged: $DOCKERHUB_REPO:latest"
